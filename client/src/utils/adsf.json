@@ -1,0 +1,160 @@
+{
+    "target": "0x8c779cf5830b96222410137a1f5946dc5cb3973f",
+    "interface": {
+        "fragments": [
+            {
+                "type": "event",
+                "inputs": [
+                    {
+                        "name": "doctorAddress",
+                        "type": "address",
+                        "baseType": "address",
+                        "indexed": true,
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "name",
+                        "type": "string",
+                        "baseType": "string",
+                        "indexed": false,
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "specialty",
+                        "type": "string",
+                        "baseType": "string",
+                        "indexed": false,
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "licenseNumber",
+                        "type": "string",
+                        "baseType": "string",
+                        "indexed": false,
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "gender",
+                        "type": "string",
+                        "baseType": "string",
+                        "indexed": false,
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    }
+                ],
+                "name": "DoctorRegistered",
+                "anonymous": false
+            },
+            {
+                "type": "function",
+                "inputs": [
+                    {
+                        "name": "_name",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "_specialty",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "_licenseNumber",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "_gender",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    }
+                ],
+                "name": "registerDoctor",
+                "constant": false,
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "payable": false,
+                "gas": null
+            },
+            {
+                "type": "function",
+                "inputs": [
+                    {
+                        "name": "_doctorAddress",
+                        "type": "address",
+                        "baseType": "address",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    }
+                ],
+                "name": "getDoctorDetails",
+                "constant": true,
+                "outputs": [
+                    {
+                        "name": "",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    },
+                    {
+                        "name": "",
+                        "type": "string",
+                        "baseType": "string",
+                        "components": null,
+                        "arrayLength": null,
+                        "arrayChildren": null
+                    }
+                ],
+                "stateMutability": "view",
+                "payable": false,
+                "gas": null
+            }
+        ],
+        "deploy": {
+            "type": "constructor",
+            "inputs": [],
+            "payable": false,
+            "gas": null
+        },
+        "fallback": null,
+        "receive": false
+    },
+    "runner": {
+        "provider": {},
+        "address": "0xa0fcC693EFBb2401BDB3AC32DBDF81832f200Aaa"
+    },
+    "filters": {},
+    "fallback": null
+}

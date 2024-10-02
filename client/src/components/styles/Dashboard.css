@@ -1,0 +1,53 @@
+/* src/components/styles/RightPanel.css */
+.right-panel {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .info-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .info-card {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .info-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .info-card h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .info-card p {
+    font-size: 1em;
+    margin-bottom: 20px;
+  }
+  
+  .info-card a {
+    color: #3182ce;
+    text-decoration: none;
+  }
+  
+  .info-card a:hover {
+    text-decoration: underline;
+  }
+  

@@ -1,0 +1,85 @@
+/* src/components/styles/SignIn.css */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f7fafc;
+    width: 100%;
+  }
+  
+  .auth-card {
+    background: white;
+    padding: 30px;
+    width: 25%;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .auth-title {
+    font-size: 2em;
+    color: #38b2ac;
+    margin-bottom: 10px;
+  }
+  
+  .auth-subtitle {
+    color: #718096;
+    margin-bottom: 20px;
+  }
+  
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .auth-form label {
+    text-align: left;
+    margin-bottom: 5px;
+    color: #2d3748;
+  }
+  
+  .auth-form input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+  }
+  
+  .auth-remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .auth-remember-me input {
+    margin-right: 10px;
+  }
+  
+  .auth-button {
+    background-color: #38b2ac;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .auth-button:hover {
+    background-color: #319795;
+  }
+  
+  .auth-footer {
+    margin-top: 20px;
+    color: #718096;
+  }
+  
+  .signup-link {
+    color: #38b2ac;
+    text-decoration: none;
+  }
+  
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+  

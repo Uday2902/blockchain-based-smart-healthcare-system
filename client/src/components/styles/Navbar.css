@@ -1,0 +1,62 @@
+src/components/styles/Navbar.css
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f7fafc;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .navbar-left .breadcrumb {
+    color: #718096;
+  }
+  
+  .navbar-left h1 {
+    margin-top: 5px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #2d3748;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #edf2f7;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-right: 20px;
+  }
+  
+  .search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    margin-left: 5px;
+  }
+  
+  .navbar-icon {
+    font-size: 1.5em;
+    color: #2d3748;
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  
+  .sign-in-button {
+    padding: 10px 20px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .sign-in-button:hover {
+    background-color: #2b6cb0;
+  }
+  
