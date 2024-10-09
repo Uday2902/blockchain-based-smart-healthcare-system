@@ -25,6 +25,8 @@ const PatientRegistration = () => {
           console.log("PRcontract -> ", PRcontract);
           await PRcontract.registerPatient(name, dob, gender);
           alert("Patient registered successfully!");
+          
+          redirect('/tables');
         } catch (error) {
           console.error("Error registering patient:", error);
           alert("Failed to register patient. Please try again.");

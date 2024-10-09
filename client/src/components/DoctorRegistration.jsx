@@ -26,6 +26,8 @@ const DoctorRegistration = () => {
         console.log("DRcontract -> ", DRcontract);
         await DRcontract.registerDoctor(name, speciality, licenceNumber, gender);
         alert("Doctor registered successfully!");
+        
+        navigate('/tables');
       } catch (error) {
         console.error("Error registering doctor:", error);
         alert("Failed to register doctor. Please try again.");

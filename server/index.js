@@ -33,9 +33,14 @@ const doctorSchema = new mongoose.Schema({
 const reportsSchema = new mongoose.Schema({
     userHash: { type: String, required: true },
     reportsHashes: [
-        { type: String, required: true }
+        {
+            fileHash: { type: String, required: true },
+            extension: { type: String, required: true },
+            fileName: { type: String, required: true },
+        }
     ]
 });
+
 
 const Patient = mongoose.model('Patient', patientSchema);
 const Doctor = mongoose.model('Doctor', doctorSchema);
@@ -47,9 +52,20 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: 1000000 },
     fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
+        checkFileType(file, (err, result) => {
+            if (err) {
+                cb(err); // Handle error from checkFileType
+            } else if (result.valid) {
+                req.fileExtension = result.extension;
+                req.fileName = result.fileName
+                cb(null, true); // Proceed with file upload
+            } else {
+                cb('Error: Invalid file type!');
+            }
+        });
     }
 }).single('file');
+
 
 async function getFileDataFromIPFS(cid) {
     console.log("cid inside -> ",cid);
@@ -60,18 +76,23 @@ async function getFileDataFromIPFS(cid) {
     return fileData;
 }
 
+
 function checkFileType(file, cb) {
     const filetypes = /jpeg|jpg|png|gif|pdf|txt/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const fileName = file.originalname;
+    console.log("Filename -> ", fileName);
+    const extension = path.extname(file.originalname).toLowerCase(); // Get file extension
+    const extname = filetypes.test(extension);
 
     const mimetype = filetypes.test(file.mimetype) || file.mimetype === 'text/plain';
 
     if (mimetype && extname) {
-        return cb(null, true);
+        return cb(null, { valid: true, extension, fileName }); // Return both valid flag and extension
     } else {
         cb('Error: Only images, PDFs, and .txt files are allowed!');
     }
 }
+
 
 app.post('/get-files', async (req, res) => {
     try {
@@ -81,14 +102,16 @@ app.post('/get-files', async (req, res) => {
         
         let files = [];
 
-        for (let fileHash of fileHashes) {
-            const fileData = await getFileDataFromIPFS(fileHash);
+        for (let item of fileHashes) {
+            const fileData = await getFileDataFromIPFS(item.fileHash);
             const base64File = fileData.toString('base64');
+            const extension = item.extension;
 
             files.push({
                 data: base64File,
-                fileName: `${fileHash}.png`,
-                fileType: 'application/png'
+                fileName: `${item.fileName}`,
+                fileType: `application/${extension}`,
+                fileHash: item.fileHash
             });
         }
 
@@ -99,6 +122,10 @@ app.post('/get-files', async (req, res) => {
     }
 });
 
+app.post('/get-files-doctor', async (req, res) => {
+    const {user} = req.body;
+
+});
 
 app.post('/upload', upload, async (req, res) => {
     if (!req.file) {
@@ -118,12 +145,16 @@ app.post('/upload', upload, async (req, res) => {
 
         let reportEntry = await Reports.findOne({ userHash: user });
         if (reportEntry) {
-            reportEntry.reportsHashes.push(cid);
+            reportEntry.reportsHashes.push({fileHash: cid, extension: req.fileExtension, fileName: req.fileName});
             await reportEntry.save();
         } else {
             const newReport = new Reports({
                 userHash: user,
-                reportsHashes: [cid]
+                reportsHashes: [{
+                    fileHash: cid,
+                    extension: req.fileExtension,
+                    fileName: req.fileName
+                }]
             });
             await newReport.save();
         }

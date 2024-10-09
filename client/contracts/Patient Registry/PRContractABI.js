@@ -200,4 +200,4 @@ const PRContractABI = [
 ]
 
 export default PRContractABI;
-export const PRContractAddress = "";
+export const PRContractAddress = "0x182c46cc08404b3a04d506eac76ae8d0c599b64f";

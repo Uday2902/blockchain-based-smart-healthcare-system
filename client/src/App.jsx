@@ -10,6 +10,7 @@ import SignUp from "./components/DoctorRegistration";
 import Billing from "./components/Billing";
 import Registration from "./components/Registration";
 import PatientTables from "./components/PatientTables"
+import DoctorTables from "./components/DoctorTables";
 
 const MainLayout = () => (
   <>
@@ -19,8 +20,11 @@ const MainLayout = () => (
       {/* <div className="content"> */}
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/tables" element={<PatientTables />} />
+          <Route path="/patient-table" element={<PatientTables />} />
+          <Route path="/doctor-table" element={<DoctorTables />} />
           <Route path="/billing" element={<Billing />} />
+          <Route path="/register" element={<Registration />} />
+          <Route path="/patientT" element={<Registration />} />
           <Route path="/register" element={<Registration />} />
         </Routes>
       {/* </div> */}

@@ -221,4 +221,4 @@ const HMContractABI = [
 ]
 
 export default HMContractABI;
-export const HMContractAddress = "";
+export const HMContractAddress = "0xf7417111f8de84c49af449419a777bc861a6593b";

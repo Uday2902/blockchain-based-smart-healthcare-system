@@ -65,6 +65,19 @@ export const useWallet = () => {
                 };
                 const logs = await provider.getLogs(filter);
                 console.log("Logs -> ", logs);
+
+                const isPatient = await PR_contract.getPatientDetails(_walletAddress);
+                if(isPatient){
+                    dispatch(setUserType({ userType: 'Patient' }));
+                    dispatch(setUserData({ userData: isPatient }));
+                    navigate('/patient-table');
+                }
+                const isDoctor = await DR_contract.getDoctorDetails(_walletAddress);
+                if(isDoctor){
+                    dispatch(setUserType({ userType: 'Doctor' }));
+                    dispatch(setUserData({ userData: isDoctor }));
+                    navigate('/DoctorTables');
+                }
                 navigate("/register");
                 // console.log(await DR_contract.getDoctorDetails(_walletAddress));
                 // console.log("From doctor ", await DR_contract.registerDoctor("Uday1", "Special", "0101", "Male"));
@@ -98,11 +111,11 @@ export const useWallet = () => {
     };
 
 
-    const getDoctorDetails = async (address) => {
-        if (signer) {
-            return await ethers.formatEther(await contract.balanceOf(signer.address));
-        }
-    };
+    // const getDoctorDetails = async (address) => {
+    //     if (signer) {
+    //         return await ethers.formatEther(await contract.balanceOf(signer.address));
+    //     }
+    // };
 
     function formatDate(dateString) {
         const date = new Date(dateString);
