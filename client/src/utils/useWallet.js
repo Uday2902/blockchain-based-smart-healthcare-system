@@ -5,17 +5,26 @@ import { setAddress, setUserId, setUserData, setDRContract, setHMContract, setPR
 import DRContractABI, { DRContractAddress } from "../../contracts/Doctor Registry/DRContractABI";
 import PRContractABI, { PRContractAddress } from "../../contracts/Patient Registry/PRContractABI";
 import HMContractABI, { HMContractAddress } from "../../contracts/Healthcare Management/HMContractABI";
+import axios from "axios"
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useWallet = () => {
+
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const signer = useSelector((state) => { return state.user.signer })
     const provider = useSelector((state) => { return state.user.provider })
-    // const DRcontract = useSelector((state) => { return state.user.DRcontract })
-    // const PRcontract = useSelector((state) => { return state.user.PRcontract })
+    const DRcontract = useSelector((state) => { return state.user.DRcontract })
+    const PRcontract = useSelector((state) => { return state.user.PRcontract })
     // const HMcontract = useSelector((state) => { return state.user.HMcontract })
     const userType = useSelector((state) => { return state.user.userType })
+    const isMetaMaskConnected = useSelector((state) => { return state.metamask.isMetaMaskConnected })
 
+    useEffect(() => {
+        console.log("Inside useeffect -> ", userType)
+    }, [userType])
 
     const handleConnectWallet = async () => {
         try {
@@ -27,7 +36,7 @@ export const useWallet = () => {
                 const _walletAddress = await signer.getAddress();
                 console.log("Signer address -> ", signer);
                 console.log("Wallet address -> ", _walletAddress);
-
+                dispatch(setMetaMaskConnectionStatus({isMetaMaskConnected: true}));
                 const network = await provider.getNetwork();
                 if (network.name !== "sepolia") {
                     alert("Please connect to Sepolia Test network");
@@ -38,32 +47,46 @@ export const useWallet = () => {
 
                 const DR_contract = new ethers.Contract(DRContractAddress, DRContractABI, signer);
                 const PR_contract = new ethers.Contract(PRContractAddress, PRContractABI, signer);
-                const HM_contract = new ethers.Contract(HMContractAddress, HMContractABI, signer);
+                // const HM_contract = new ethers.Contract(HMContractAddress, HMContractABI, signer);
 
-                // dispatch(setSigner({ signer: signer }));
+                dispatch(setSigner({ signer: _walletAddress }));
                 // dispatch(setProvider({ provider: provider }));
-                // dispatch(setDRContract({ DRContract: DR_contract }));
-                // dispatch(setPRContract({ DRContract: PR_contract }));
-                // dispatch(setHMContract({ DRContract: HM_contract }));
+                console.log("Before storing to store DRContract")
+                dispatch(setDRContract({ DRcontract: DR_contract }));
+                dispatch(setPRContract({ PRcontract: PR_contract }));
+                // dispatch(setHMContract({ DRcontract: HM_contract }));
                 // dispatch(setCurrentNetwork({ currentNetwork: network.name }));
                 // dispatch(setMetamaskStatus({ isMetaMaskConnected: true }));
 
-                // const filter = {
-                //     address: "0xa8745260c4dcf5cd4be6661a82165fbcb2b41e2f",
-                //     fromBlock: 0,
-                //     toBlock: 'latest',
-                // };
-                // const logs = await provider.getLogs(filter);
-                // console.log("Logs -> ", logs);
+                const filter = {
+                    address: "0x8c779cf5830b96222410137a1f5946dc5cb3973f",
+                    fromBlock: 0,
+                    toBlock: 'latest',
+                };
+                const logs = await provider.getLogs(filter);
+                console.log("Logs -> ", logs);
+                navigate("/register");
+                // console.log(await DR_contract.getDoctorDetails(_walletAddress));
                 // console.log("From doctor ", await DR_contract.registerDoctor("Uday1", "Special", "0101", "Male"));
-                try{
-                    let response = await DR_contract.getDoctorDetails(_wallet);
-                }catch(err){
-                    console.log("err", err["data"]);
-                }   
+
+                // try{
+                //     console.log("Making request");
+                //     await axios.post("http://localhost:5000/search", { hash: _walletAddress })
+                //         .then(res => {
+                //             console.log("userType response -> ", res.data.userType);
+                //             dispatch(setUserType({userType: res.data.userType}));
+                //             console.log("userType -> ", userType)
+                //         })
+                //         .catch(err => {
+                //             console.log("User not found ", err);
+                //             navigate("/register");
+                //         });
+                //     // let response = await DR_contract.getDoctorDetails(_walletAddress);
+                // }catch(err){
+                //     console.log("err", err);
+                // }   
                 // console.log("From doctor response ", response);
                 // console.log("From patient ", await PR_contract.patients[_walletAddress])
-                
 
             } else {
                 console.error('MetaMask is not installed or not accessible.');

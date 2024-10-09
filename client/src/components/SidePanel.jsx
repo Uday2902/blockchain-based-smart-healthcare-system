@@ -41,7 +41,7 @@ const SidePanel = () => {
         </div>
         <div className="menu-item">
           <FaUserPlus className="menu-icon" />
-          <Link to="/signup" className="menu-link">Sign Up</Link>
+          <Link to="/register" className="menu-link">Sign Up</Link>
         </div>
       </div>
     </div>

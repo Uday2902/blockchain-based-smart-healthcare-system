@@ -6,22 +6,25 @@ import Navbar from "./components/Navbar";
 import TableSection from "./components/TableSection";
 import Dashboard from "./components/Dashboard";
 import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import SignUp from "./components/DoctorRegistration";
 import Billing from "./components/Billing";
+import Registration from "./components/Registration";
+import PatientTables from "./components/PatientTables"
 
 const MainLayout = () => (
   <>
     <SidePanel />
     <div className="main-content">
-      <Navbar />
-      <div className="content">
+      {/* <Navbar /> */}
+      {/* <div className="content"> */}
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/tables" element={<TableSection />} />
+          <Route path="/tables" element={<PatientTables />} />
           <Route path="/billing" element={<Billing />} />
+          <Route path="/register" element={<Registration />} />
         </Routes>
-      </div>
-    </div>
+      {/* </div> */}
+     </div> 
   </>
 );
 
