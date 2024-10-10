@@ -41,11 +41,11 @@ export const userSlice = createSlice({
         },
         setUserData: (state, action) => {
             state.userData = action.payload.userData;
-            console.log("Setting up userData in store");
+            console.log("Setting up userData in store", state.userData);
         },
         setUserType: (state, action) => {
             state.userType = action.payload.userType;
-            console.log("Setting up userType in store");
+            console.log("Setting up userType in store", state.userType);
         }
     }
 })

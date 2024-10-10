@@ -76,7 +76,6 @@ async function getFileDataFromIPFS(cid) {
     return fileData;
 }
 
-
 function checkFileType(file, cb) {
     const filetypes = /jpeg|jpg|png|gif|pdf|txt/;
     const fileName = file.originalname;
@@ -187,6 +186,20 @@ app.post('/doctors', async (req, res) => {
         res.status(201).json(savedDoctor);
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+});
+
+app.get('/doctors-list', async (req, res) => {
+    try{
+        const doctors = await Doctor.find({});
+        if(doctors){
+            return res.status(200).send(doctors);
+        }else{
+            return res.status(200).send({message: "No doctors found!"});
+        }
+    }catch(err){
+        console.log("Error while fetching doctors list : ", err);
+        return res.status(500).send({err: "Error while fetching doctors list"});
     }
 });
 

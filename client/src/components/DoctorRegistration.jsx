@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/SignUp.css";
 import { useSelector } from "react-redux";
 import DRContractABI, { DRContractAddress } from "../../contracts/Doctor Registry/DRContractABI";
+import { useNavigate } from "react-router-dom";
 
 const DoctorRegistration = () => {
   
@@ -14,8 +15,17 @@ const DoctorRegistration = () => {
   const signer = useSelector((state) => state.user.signer);
   const provider = useSelector((state) => state.user.provider);
   const DRcontract = useSelector((state) => state.user.DRcontract);
+  const userType = useSelector((state) => state.user.userType);
+  const navigate = useNavigate();
 
-  
+  useEffect(() => {
+    if(userType === "Doctor"){
+      navigate('/doctor-table');
+    }else if(userType === "Patient"){
+      navigate('/patient-table');
+    }
+  },[])
+
 
   const handleDoctorRegistration = async (e) => {
     e.preventDefault();

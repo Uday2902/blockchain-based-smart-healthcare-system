@@ -11,6 +11,7 @@ import Billing from "./components/Billing";
 import Registration from "./components/Registration";
 import PatientTables from "./components/PatientTables"
 import DoctorTables from "./components/DoctorTables";
+import ReactModal from "./components/ReactModal";
 
 const MainLayout = () => (
   <>
@@ -19,13 +20,10 @@ const MainLayout = () => (
       {/* <Navbar /> */}
       {/* <div className="content"> */}
         <Routes>
-          <Route path="/" element={<Dashboard />} />
           <Route path="/patient-table" element={<PatientTables />} />
           <Route path="/doctor-table" element={<DoctorTables />} />
           <Route path="/billing" element={<Billing />} />
-          <Route path="/register" element={<Registration />} />
-          <Route path="/patientT" element={<Registration />} />
-          <Route path="/register" element={<Registration />} />
+          <Route path="/modal" element={<ReactModal />} />
         </Routes>
       {/* </div> */}
      </div> 
@@ -37,8 +35,10 @@ function App() {
     <div className="app">
       <Router>
         <Routes>
+          <Route path="/" element={<SignIn />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/register" element={<Registration />} />
           <Route path="/*" element={<MainLayout />} />
         </Routes>
       </Router>

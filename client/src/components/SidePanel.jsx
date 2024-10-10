@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaTable, FaFileInvoiceDollar, FaUser, FaSignInAlt, FaUserPlus, FaBars } from 'react-icons/fa';
 import './styles/SidePanel.css';
 
 const SidePanel = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -13,7 +14,7 @@ const SidePanel = () => {
   return (
     <div className={`side-panel ${isOpen ? 'open' : ''}`}>
       <div className="side-panel-header">
-        <h1>PURITY UI DASHBOARD</h1>
+        <h1>Blockchain Based Smart Healthcare</h1>
         <button className="menu-toggle" onClick={toggleMenu}>
           <FaBars />
         </button>
@@ -41,7 +42,7 @@ const SidePanel = () => {
         </div>
         <div className="menu-item">
           <FaUserPlus className="menu-icon" />
-          <Link to="/register" className="menu-link">Sign Up</Link>
+          <div className="menu-link" onClick={() => {navigate('/register')}}>Sign Up</div>
         </div>
       </div>
     </div>

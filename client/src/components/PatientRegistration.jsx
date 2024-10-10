@@ -2,12 +2,14 @@
 import React, { useState } from "react";
 import "./styles/SignUp.css";
 import { useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 
 const PatientRegistration = () => {
   const [name, setName] = useState("");
   const [dob, setDOB] = useState("");
   const [gender, setGender] = useState("");
+
+  const navigate = useNavigate();
 
   const isMetaMaskConnected = useSelector(
     (state) => state.metamask.isMetaMaskConnected
@@ -15,25 +17,34 @@ const PatientRegistration = () => {
   const signer = useSelector((state) => state.user.signer);
   const provider = useSelector((state) => state.user.provider);
   const PRcontract = useSelector((state) => state.user.PRcontract);
+  const userType = useSelector((state) => state.user.userType);
+
+  useEffect(() => {
+    if (userType === "Doctor") {
+      navigate("/doctor-table");
+    } else if (userType === "Patient") {
+      navigate("/patient-table");
+    }
+  }, []);
 
   const handlePatientRegistration = async (e) => {
     e.preventDefault();
 
     if (isMetaMaskConnected) {
-        try {
-          console.log("isMetaMaskConnected -> ", isMetaMaskConnected);
-          console.log("PRcontract -> ", PRcontract);
-          await PRcontract.registerPatient(name, dob, gender);
-          alert("Patient registered successfully!");
-          
-          redirect('/tables');
-        } catch (error) {
-          console.error("Error registering patient:", error);
-          alert("Failed to register patient. Please try again.");
-        }
-      } else {
-        alert("Please connect your MetaMask wallet first.");
+      try {
+        console.log("isMetaMaskConnected -> ", isMetaMaskConnected);
+        console.log("PRcontract -> ", PRcontract);
+        await PRcontract.registerPatient(name, dob, gender);
+        alert("Patient registered successfully!");
+
+        navigate("/tables");
+      } catch (error) {
+        console.error("Error registering patient:", error);
+        alert("Failed to register patient. Please try again.");
       }
+    } else {
+      alert("Please connect your MetaMask wallet first.");
+    }
   };
 
   return (

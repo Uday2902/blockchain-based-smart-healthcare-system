@@ -65,20 +65,31 @@ export const useWallet = () => {
                 };
                 const logs = await provider.getLogs(filter);
                 console.log("Logs -> ", logs);
-
-                const isPatient = await PR_contract.getPatientDetails(_walletAddress);
+                let isPatient;
+                try{
+                    isPatient = await PR_contract.getPatientDetails(_walletAddress);
+                }catch(err){
+                    
+                    console.log("Patient err -> ", err);
+                }
                 if(isPatient){
                     dispatch(setUserType({ userType: 'Patient' }));
                     dispatch(setUserData({ userData: isPatient }));
                     navigate('/patient-table');
                 }
-                const isDoctor = await DR_contract.getDoctorDetails(_walletAddress);
+                let isDoctor;
+                try{
+                    isDoctor = await DR_contract.getDoctorDetails(_walletAddress);
+                }catch(err){
+                    console.log("ISDOCTOR -> ", isDoctor);
+                    console.log("Doctor err -> ", err);
+                }
                 if(isDoctor){
                     dispatch(setUserType({ userType: 'Doctor' }));
                     dispatch(setUserData({ userData: isDoctor }));
-                    navigate('/DoctorTables');
+                    navigate('/doctor-table');
                 }
-                navigate("/register");
+                if(isPatient === undefined && isDoctor === undefined) navigate('/register');
                 // console.log(await DR_contract.getDoctorDetails(_walletAddress));
                 // console.log("From doctor ", await DR_contract.registerDoctor("Uday1", "Special", "0101", "Male"));
 

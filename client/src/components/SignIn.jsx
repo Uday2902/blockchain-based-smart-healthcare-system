@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { ethers } from "ethers";
 import "./styles/SignIn.css";
@@ -7,11 +7,23 @@ import DRContractABI, {
   DRContractAddress,
 } from "../../contracts/Doctor Registry/DRContractABI";
 import { useWallet } from "../utils/useWallet";
+import { useSelector } from "react-redux";
 
 const SignIn = () => {
   const [connected, setConnected] = useState(false);
+  const isMetaMaskConnected = useSelector((state) => state.metamask.isMetaMaskConnected);
+
   const navigate = useNavigate();
   const {handleConnectWallet} = useWallet();
+
+  useEffect(() => {
+    console.log("ISMETAMASK CONNECTED -> ", isMetaMaskConnected);
+    if(isMetaMaskConnected){
+      navigate('/register');
+    }
+  },[])
+
+
   const handleConnectionClick = async () => {
     if (!connected) {
 
