@@ -2,22 +2,28 @@ import React, { useEffect, useState } from "react";
 import "./styles/TableSection.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ReactModal from "./ReactModal";
 
 const PatientTables = () => {
   const [file, setFile] = useState(null);
   const [dataToShow, setDataToShow] = useState([]); // Store the files to show in table
   const [load, setLoad] = useState(true);
-  const [copiedHash, setCopiedHash] = useState(null); 
-  const navigate = useNavigate();
-  const isMetaMaskConnected = useSelector(state => state.metamask.isMetaMaskConnected);
-  const signer = useSelector(state => state.user.signer);
-  useEffect(() => {
+  const [copiedHash, setCopiedHash] = useState(null);
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [selectedFile, setSelectedFile] = useState(null); // Store the selected file for editing
 
-    if(!isMetaMaskConnected || signer===undefined || signer===null){
-      navigate('/signin');
+  const navigate = useNavigate();
+  const isMetaMaskConnected = useSelector(
+    (state) => state.metamask.isMetaMaskConnected
+  );
+  const signer = useSelector((state) => state.user.signer);
+
+  useEffect(() => {
+    if (!isMetaMaskConnected || signer === undefined || signer === null) {
+      navigate("/signin");
     }
-  },[])
+  }, []);
 
   // Fetch files on load
   useEffect(() => {
@@ -28,8 +34,6 @@ const PatientTables = () => {
         });
         const files = response.data;
         setDataToShow(files); // Set files to state to be rendered in the table
-
-        console.log("Files received -> ", files);
       } catch (error) {
         console.error("Error downloading files", error);
       }
@@ -54,7 +58,7 @@ const PatientTables = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Make sure content-type is multipart/form-data
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -86,7 +90,7 @@ const PatientTables = () => {
       document.body.appendChild(link);
       link.click();
 
-      // // Cleanup
+      // Cleanup
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -105,66 +109,84 @@ const PatientTables = () => {
     setTimeout(() => setCopiedHash(null), 2000); // Reset the copied hash after 2 seconds
   };
 
-  return (
-    <div className="table-section">
-      <div style={{ textAlign: "right" }}>
-        <input type="file" id="file-upload" onChange={handleFileChange} />
-        <button
-          onClick={handleUploadClick}
-          style={{ marginLeft: "10px" }}
-          disabled={!file}
-        >
-          Upload New Report
-        </button>
-      </div>
-      <h2>Patient Tables</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Report</th>
-            <th>Hash</th>
-            <th>Last Updated</th>
-            <th>Download</th>
-            <th>Manage Permissions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dataToShow.map((file, index) => (
-            <tr key={index}>
-              <td className="author">
-                <img src="https://via.placeholder.com/50" alt={file.fileName} />
-                <div>
-                  <h3>{file.fileName}</h3>
-                </div>
-              </td>
-              <td
-                onClick={() => handleCopyToClipboard(file.fileHash)}
-                title="Copy IPFS hash"
-                style={{
-                  cursor: "pointer",
-                  color: copiedHash === file.fileHash ? "green" : "black", // Change color when copied
-                  fontWeight: copiedHash === file.fileHash ? "bold" : "normal", // Change weight when copied
-                  transition: "color 0.3s ease", // Transition effect
-                }}
-              >
-                {file.fileHash.slice(0, 12)}...{" "}
-                {/* Display only first 12 characters */}
-              </td>
+  // Open modal on "Edit" button click and set the selected file for editing
+  const handleEditClick = (file) => {
+    setSelectedFile(file);
+    setShowModal(true);
+  };
 
-              <td>{file.lastUpdated || "N/A"}</td>
-              <td>
-                <button onClick={() => handleDownloadClick(file)}>
-                  Download
-                </button>
-              </td>
-              <td>
-                <button>Edit</button>
-              </td>
+  return (
+    <>
+      {showModal && (
+        <ReactModal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          selectedFile={selectedFile}
+        />
+      )}
+
+      <div className="table-section">
+        <div style={{ textAlign: "right" }}>
+          <input type="file" id="file-upload" onChange={handleFileChange} />
+          <button
+            onClick={handleUploadClick}
+            style={{ marginLeft: "10px" }}
+            disabled={!file}
+          >
+            Upload New Report
+          </button>
+        </div>
+        <h2>Patient Tables</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Report</th>
+              <th>Hash</th>
+              <th>Last Updated</th>
+              <th>Download</th>
+              <th>Manage Permissions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {dataToShow.map((file, index) => (
+              <tr key={index}>
+                <td className="author">
+                  <img
+                    src="https://via.placeholder.com/50"
+                    alt={file.fileName}
+                  />
+                  <div>
+                    <h3>{file.fileName}</h3>
+                  </div>
+                </td>
+                <td
+                  onClick={() => handleCopyToClipboard(file.fileHash)}
+                  title="Copy IPFS hash"
+                  style={{
+                    cursor: "pointer",
+                    color: copiedHash === file.fileHash ? "green" : "black",
+                    fontWeight:
+                      copiedHash === file.fileHash ? "bold" : "normal",
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  {file.fileHash.slice(0, 12)}...{" "}
+                </td>
+                <td>{file.lastUpdated || "N/A"}</td>
+                <td>
+                  <button onClick={() => handleDownloadClick(file)}>
+                    Download
+                  </button>
+                </td>
+                <td>
+                  <button onClick={() => handleEditClick(file)}>Edit</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 

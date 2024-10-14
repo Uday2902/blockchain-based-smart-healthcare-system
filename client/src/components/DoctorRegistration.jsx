@@ -35,9 +35,10 @@ const DoctorRegistration = () => {
         console.log("isMetaMaskConnected -> ", isMetaMaskConnected);
         console.log("DRcontract -> ", DRcontract);
         await DRcontract.registerDoctor(name, speciality, licenceNumber, gender);
+        await axios.post('http://localhost:5000/doctors', {hash: signer});
         alert("Doctor registered successfully!");
         
-        navigate('/tables');
+        navigate('/doctor-table');
       } catch (error) {
         console.error("Error registering doctor:", error);
         alert("Failed to register doctor. Please try again.");

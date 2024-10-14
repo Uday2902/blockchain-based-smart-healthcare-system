@@ -1,72 +1,137 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import { useSelector } from "react-redux";
+import ShowDoctorsInfo from "./ShowDoctorsInfo";
 
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import { useSelector } from 'react-redux';
+function ReactModal({ show, onClose, selectedFile }) {
+  console.log("Selected file -> ", selectedFile);
+  const [doctorsDetails, setDoctorsDetails] = useState([]);
+  const DRcontract = useSelector((state) => state.user.DRcontract);
+  const isMetaMaskConnected = useSelector(
+    (state) => state.metamask.isMetaMaskConnected
+  );
 
-function ReactModal() {
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      if (DRcontract) {
+        try {
+          const response = await axios.get(
+            "http://localhost:5000/doctors-list"
+          );
+          const doctors = response.data;
+          let doctorsDetails = [];
 
-  const [show, setShow] = useState(false);
-  const DRcontract = useSelector((state) => { return state.user.DRcontract })
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+          for (let doctor of doctors) {
+            if (ethers.isAddress(doctor.hash)) {
+              try {
+                const normalizedAddress = ethers.getAddress(doctor.hash);
+                const doctorDetails = await DRcontract.getDoctorDetails(
+                  normalizedAddress
+                );
+                doctorsDetails.push(doctorDetails);
+              } catch (error) {
+                console.error("Error while fetching doctor details:", error);
+              }
+            } else {
+              console.error("Invalid Ethereum address:", doctor.hash);
+            }
+          }
+          setDoctorsDetails(doctorsDetails);
+        } catch (error) {
+          console.error("Error while fetching doctor details:", error);
+        }
+      }
+    };
 
-  useEffect(async () => {
-    const response = await axios.get('http://localhost:5000/doctors-list');
-    const doctors = await response.data;
-    console.log("Fetched doctors list for modal : ", doctors);
-    for(let doctor of doctors){
-      console.log("doctor -> ", doctor.hash);
-      const doctorDetails = await DRcontract.getDoctorDetails(doctor.hash);
-      console.log("Doctors details -> ", doctorDetails);
-    }
+    fetchDoctors();
   }, [DRcontract]);
 
+  if (!show) return null;
+
   return (
-    <>
-      {/* Button to trigger the modal */}
-      <Button variant="primary" onClick={handleShow}>
-        Launch Modal
-      </Button>
-
-      {/* Modal with custom styles to keep it centered */}
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static" // prevents clicking outside to close the modal
-        keyboard={false} // disables closing via ESC key
+    <div
+      className="modal-background"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 9999,
+      }}
+    >
+      <div
+        className="modal-content"
         style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          height: '70vh',
-          width: '50vw',
-          border: '1px solid black',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 1050,
-          
+          backgroundColor: "white",
+          padding: "20px",
+          borderRadius: "8px",
+          width: "50vw",
+          height: "70vh",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          position: "relative",
+          overflowY: "auto",
         }}
-        dialogClassName="custom-modal"
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Centered Modal</Modal.Title>
-        </Modal.Header>
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            backgroundColor: "red",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            padding: "5px 10px",
+          }}
+        >
+          X
+        </button>
 
-        <Modal.Body>
-          <p>Modal body text goes here.</p>
-        </Modal.Body>
+        <div style={{ marginBottom: "20px" }}>
+          <h2>Edit Report: {selectedFile.fileName}</h2>
+        </div>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+        <ShowDoctorsInfo doctorsDetails={doctorsDetails} />
+
+        <div style={{ marginTop: "20px", textAlign: "right" }}>
+          <button
+            onClick={onClose}
+            style={{
+              backgroundColor: "gray",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              padding: "10px 20px",
+              marginRight: "10px",
+            }}
+          >
             Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              backgroundColor: "blue",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              padding: "10px 20px",
+            }}
+          >
             Save changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

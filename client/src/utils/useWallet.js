@@ -57,17 +57,19 @@ export const useWallet = () => {
                 // dispatch(setHMContract({ DRcontract: HM_contract }));
                 // dispatch(setCurrentNetwork({ currentNetwork: network.name }));
                 // dispatch(setMetamaskStatus({ isMetaMaskConnected: true }));
-
+                console.log("HERE")
                 const filter = {
                     address: "0x8c779cf5830b96222410137a1f5946dc5cb3973f",
                     fromBlock: 0,
                     toBlock: 'latest',
                 };
-                const logs = await provider.getLogs(filter);
-                console.log("Logs -> ", logs);
+                    // const logs = await provider.getLogs(filter);
+                    // console.log("Logs -> ", logs);
                 let isPatient;
                 try{
                     isPatient = await PR_contract.getPatientDetails(_walletAddress);
+                    console.log("Is patient -> ", isPatient)
+                    
                 }catch(err){
                     
                     console.log("Patient err -> ", err);
@@ -89,7 +91,9 @@ export const useWallet = () => {
                     dispatch(setUserData({ userData: isDoctor }));
                     navigate('/doctor-table');
                 }
-                if(isPatient === undefined && isDoctor === undefined) navigate('/register');
+                if(isPatient === undefined && isDoctor === undefined){
+                    navigate('/register');
+                } 
                 // console.log(await DR_contract.getDoctorDetails(_walletAddress));
                 // console.log("From doctor ", await DR_contract.registerDoctor("Uday1", "Special", "0101", "Male"));
 
