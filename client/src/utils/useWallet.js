@@ -1,9 +1,10 @@
 import { ethers } from 'ethers';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMetaMaskConnectionStatus } from '../state/metaMaskSlice';
-import { setAddress, setUserId, setUserData, setDRContract, setHMContract, setPRContract, setProvider, setSigner, setUserType } from '../state/userSlice';
+import { setAddress, setUserId, setUserData, setMRContract, setDRContract, setHMContract, setPRContract, setProvider, setSigner, setUserType } from '../state/userSlice';
 import DRContractABI, { DRContractAddress } from "../../contracts/Doctor Registry/DRContractABI";
 import PRContractABI, { PRContractAddress } from "../../contracts/Patient Registry/PRContractABI";
+import MRContractABI, { MRContractAddress } from "../../contracts/Medical Records/MRContractABI";
 import HMContractABI, { HMContractAddress } from "../../contracts/Healthcare Management/HMContractABI";
 import axios from "axios"
 import { useEffect } from 'react';
@@ -47,6 +48,7 @@ export const useWallet = () => {
 
                 const DR_contract = new ethers.Contract(DRContractAddress, DRContractABI, signer);
                 const PR_contract = new ethers.Contract(PRContractAddress, PRContractABI, signer);
+                const MR_contract = new ethers.Contract(MRContractAddress, MRContractABI, signer);
                 // const HM_contract = new ethers.Contract(HMContractAddress, HMContractABI, signer);
 
                 dispatch(setSigner({ signer: _walletAddress }));
@@ -55,6 +57,7 @@ export const useWallet = () => {
                 dispatch(setDRContract({ DRcontract: DR_contract }));
                 dispatch(setPRContract({ PRcontract: PR_contract }));
                 // dispatch(setHMContract({ DRcontract: HM_contract }));
+                dispatch(setMRContract({ MRcontract: MR_contract }));
                 // dispatch(setCurrentNetwork({ currentNetwork: network.name }));
                 // dispatch(setMetamaskStatus({ isMetaMaskConnected: true }));
                 console.log("HERE")

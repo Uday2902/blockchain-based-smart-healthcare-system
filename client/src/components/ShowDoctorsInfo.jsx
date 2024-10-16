@@ -1,10 +1,34 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-const ShowDoctorsInfo = ({doctorsDetails}) => {
+const ShowDoctorsInfo = ({doctorsDetails, selectedFile}) => {
+
+  const MRcontract = useSelector((state) => { return state.user.MRcontract });
+  const signer = useSelector((state) => {return state.user.signer});
 
     console.log("Inner doctorsDetails -> ", doctorsDetails);
+    console.log("Selected file -> ", selectedFile);
+
+    const handleAssignClick = async (item) => {
+      try{
+        console.log("Item -> ", item)
+        console.log("MRCONTRACT -> ",MRcontract)
+        // await MRcontract.uploadReport(signer, selectedFile.fileHash)
+        // await MRcontract.grantAccess(selectedFile.fileHash, item[3])
+        const isAlreadyHasAccess = await MRcontract.hasAccess(item[3], selectedFile.fileHash);
+        if(isAlreadyHasAccess){
+          
+        }
+      }catch(err){
+        console.log("Error while assiging value -> ", err);
+      }
+    }
+
+    const handleRevokeClick = (item) => {
+
+    }
 
   return (
     <>

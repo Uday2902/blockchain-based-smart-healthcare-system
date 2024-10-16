@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles/TableSection.css";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const data = [
   {
@@ -11,9 +12,13 @@ const data = [
 ];
 
 const DoctorTables = () => {
+
+  const signer = useSelector((state) => { return state.user.signer })
+  const MRcontract = useSelector((state) => { return state.user.MRcontract })
+
   useEffect(async () => {
     try {
-      const response = await axios.post("http://localhost:5000/get-files-doctor", { user: "Uday 7" });
+      const response = await axios.post("http://localhost:5000/get-file", { user: signer });
 
       const files = response.data;
 

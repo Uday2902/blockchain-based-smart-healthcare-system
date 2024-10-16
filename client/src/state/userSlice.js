@@ -5,6 +5,7 @@ const initialState = {
     PRcontract: null,
     DRcontract: null,
     HMcontract: null,
+    MRcontract: null,
     provider: null,
     userAddress: "",
     userId: "",
@@ -31,6 +32,9 @@ export const userSlice = createSlice({
         setHMContract: (state, action) => {
             state.HMcontract = action.payload.HMcontract;
         },
+        setMRContract: (state, action) => {
+            state.MRcontract = action.payload.MRcontract;
+        },
         setAddress: (state, action) => {
             state.userAddress = action.payload.userAddress;
             console.log("Setting up userAddressw in store");
@@ -50,5 +54,5 @@ export const userSlice = createSlice({
     }
 })
 
-export const {setAddress, setUserId, setUserData, setDRContract, setHMContract, setPRContract, setProvider, setSigner, setUserType} = userSlice.actions;
+export const {setAddress, setUserId, setUserData, setDRContract, setHMContract, setPRContract, setMRContract, setProvider, setSigner, setUserType} = userSlice.actions;
 export default userSlice.reducer;

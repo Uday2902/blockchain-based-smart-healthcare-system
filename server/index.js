@@ -41,10 +41,15 @@ const reportsSchema = new mongoose.Schema({
     ]
 });
 
+const IPFSSchema = new mongoose.Schema({
+    hash: { type: String, required: true }
+});
+
 
 const Patient = mongoose.model('Patient', patientSchema);
 const Doctor = mongoose.model('Doctor', doctorSchema);
 const Reports = mongoose.model('Report', reportsSchema);
+const IPFS = mongoose.model('IPFS', IPFSSchema);
 
 const storage = multer.memoryStorage();
 
@@ -121,8 +126,14 @@ app.post('/get-files', async (req, res) => {
     }
 });
 
-app.post('/get-files-doctor', async (req, res) => {
-    const {user} = req.body;
+app.post('/get-file', async (req, res) => {
+    try{
+        const { user } = req.body;
+
+    }catch(err){
+
+    }
+
 
 });
 
@@ -155,6 +166,8 @@ app.post('/upload', upload, async (req, res) => {
                     fileName: req.fileName
                 }]
             });
+            const newIPFS = new IPFS({hash: cid})
+            await newIPFS.save();
             await newReport.save();
         }
 

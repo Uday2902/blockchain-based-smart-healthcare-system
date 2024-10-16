@@ -29,7 +29,12 @@ function ReactModal({ show, onClose, selectedFile }) {
                 const doctorDetails = await DRcontract.getDoctorDetails(
                   normalizedAddress
                 );
-                doctorsDetails.push(doctorDetails);
+                let newDoctorDetails = Object.assign({}, doctorDetails);
+                newDoctorDetails[3] = normalizedAddress;
+
+                console.log(newDoctorDetails);            
+
+                doctorsDetails.push(newDoctorDetails);
               } catch (error) {
                 console.error("Error while fetching doctor details:", error);
               }
@@ -99,7 +104,10 @@ function ReactModal({ show, onClose, selectedFile }) {
           <h2>Edit Report: {selectedFile.fileName}</h2>
         </div>
 
-        <ShowDoctorsInfo doctorsDetails={doctorsDetails} />
+        <ShowDoctorsInfo
+          doctorsDetails={doctorsDetails}
+          selectedFile={selectedFile}
+        />
 
         <div style={{ marginTop: "20px", textAlign: "right" }}>
           <button
