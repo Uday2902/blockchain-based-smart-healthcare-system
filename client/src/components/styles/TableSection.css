@@ -1,6 +1,7 @@
 /* src/components/styles/TableSection.css */
 .table-section {
     padding: 20px;
+    overflow: scroll;
   }
   
   .table-section h2 {

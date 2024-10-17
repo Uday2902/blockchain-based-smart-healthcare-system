@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaTable, FaFileInvoiceDollar, FaUser, FaSignInAlt, FaUserPlus, FaBars } from 'react-icons/fa';
 import './styles/SidePanel.css';
+import { useSelector } from 'react-redux';
 
 const SidePanel = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const userType = useSelector((state) => state.user.userType );
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -26,7 +28,7 @@ const SidePanel = () => {
         </div>
         <div className="menu-item">
           <FaTable className="menu-icon" />
-          <Link to="/tables" className="menu-link">Tables</Link>
+          <Link to= {userType==="Doctor" ? "/doctor-table" : "/patient-table"} className="menu-link">Tables</Link>
         </div>
         <div className="menu-item">
           <FaFileInvoiceDollar className="menu-icon" />

@@ -126,12 +126,30 @@ app.post('/get-files', async (req, res) => {
     }
 });
 
-app.post('/get-file', async (req, res) => {
+app.post('/get-files-doctor', async (req, res) => {
     try{
-        const { user } = req.body;
+        const { doctorAddress, fileHashes } = req.body;
+        console.log("fileHashes -> ", fileHashes);
+
+        let files = [];
+
+        for (let item of fileHashes) {
+            const fileData = await getFileDataFromIPFS(item);
+            const base64File = fileData.toString('base64');
+            // const extension = item.extension;
+
+            files.push({
+                data: base64File,
+                fileName: `${item}`,
+                // fileType: `application/${extension}`,
+                fileHash: item
+            });
+        }
+        res.status(200).json(files);
 
     }catch(err){
-
+        console.error('Error fetching files:', err);
+        res.status(500).send('Error fetching files');
     }
 
 
@@ -171,7 +189,7 @@ app.post('/upload', upload, async (req, res) => {
             await newReport.save();
         }
 
-        res.send(`File uploaded successfully. Hash: ${cid}`);
+        res.status(200).send({message: `File uploaded successfully. Hash: ${cid}`, cid});
     } catch (error) {
         console.error('Error uploading file to IPFS or saving to database:', error);
         res.status(500).send(`Error: ${error.message}`);

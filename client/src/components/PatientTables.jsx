@@ -18,6 +18,7 @@ const PatientTables = () => {
     (state) => state.metamask.isMetaMaskConnected
   );
   const signer = useSelector((state) => state.user.signer);
+  const MRcontract = useSelector((state) => { return state.user.MRcontract });
 
   useEffect(() => {
     if (!isMetaMaskConnected || signer === undefined || signer === null) {
@@ -62,8 +63,10 @@ const PatientTables = () => {
           },
         }
       );
-
-      alert(`File uploaded successfully. CID: ${response.data}`);
+      const cid = response.data.cid;
+      const uploadReportRes = await MRcontract.uploadReport(signer, cid);
+      console.log("uploadReportRes -> ", uploadReportRes);
+      alert(`File uploaded successfully. CID: ${response.data.cid}`);
       setLoad((prev) => !prev); // Reload the file list after upload
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -136,7 +139,7 @@ const PatientTables = () => {
             Upload New Report
           </button>
         </div>
-        <h2>Patient Tables</h2>
+        <h2>Reports</h2>
         <table>
           <thead>
             <tr>

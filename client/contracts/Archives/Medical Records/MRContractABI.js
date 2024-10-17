@@ -144,49 +144,6 @@ const MRContractABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "doctorsReportsList",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "doctorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getDoctorReports",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
 				"name": "doctorAddress",
 				"type": "address"
 			},
@@ -263,4 +220,4 @@ const MRContractABI = [
 ]
 
 export default MRContractABI;
-export const MRContractAddress = "0x6646635dee3093abcdca207b9e9d583c55077745";
+export const MRContractAddress = "0xc963495896563414ccb96982e098e7f2034bf42d";
