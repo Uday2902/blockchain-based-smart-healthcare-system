@@ -205,6 +205,7 @@ app.post('/doctors', async (req, res) => {
 app.get('/doctors-list', async (req, res) => {
     try{
         const doctors = await Doctor.find({});
+        console.log("Doctors -> ", doctors);
         if(doctors){
             return res.status(200).send(doctors);
         }else{

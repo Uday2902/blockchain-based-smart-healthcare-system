@@ -1,8 +1,9 @@
 // src/components/SignUp.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles/SignUp.css";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PatientRegistration = () => {
   const [name, setName] = useState("");
