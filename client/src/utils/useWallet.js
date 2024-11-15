@@ -27,6 +27,45 @@ export const useWallet = () => {
         console.log("Inside useeffect -> ", userType)
     }, [userType])
 
+
+    const fetchLogs = async () => {
+
+        const filter = {
+            address: "0x6646635dee3093abcdca207b9e9d583c55077745",
+            fromBlock: 0,
+            toBlock: 'latest',
+        };
+        const logs = await provider.getLogs(filter);
+
+        const filteredTransactions = await Promise.all(logs.map(async (transaction) => {
+            const blockDetails = await provider.getBlock(transaction.blockNumber);
+            const from = transaction.topics[1].replace(/^0x0+/, '0x');
+            const to = transaction.topics[2].replace(/^0x0+/, '0x');
+            const amount = await ethers.formatEther(transaction.data);
+            const date = await formatDate(blockDetails.date);
+
+            if (from.toLowerCase() === signerAddress.toLowerCase()) {
+                return {
+                    SoR: "Sent",
+                    SoRAddress: to,
+                    amount: amount,
+                    date: date
+                };
+            } else if (to.toLowerCase() === signerAddress.toLowerCase()) {
+                return {
+                    SoR: "Received",
+                    SoRAddress: from,
+                    amount: amount,
+                    date: date
+                }
+            } else {
+                return null;
+            }
+        }));
+        console.log("Filter -> ", filteredTransactions)
+        return filteredTransactions
+    }
+
     const handleConnectWallet = async () => {
         try {
             if (window.ethereum && window.ethereum.isMetaMask) {
@@ -37,7 +76,7 @@ export const useWallet = () => {
                 const _walletAddress = await signer.getAddress();
                 console.log("Signer address -> ", signer);
                 console.log("Wallet address -> ", _walletAddress);
-                dispatch(setMetaMaskConnectionStatus({isMetaMaskConnected: true}));
+                dispatch(setMetaMaskConnectionStatus({ isMetaMaskConnected: true }));
                 const network = await provider.getNetwork();
                 if (network.name !== "sepolia") {
                     alert("Please connect to Sepolia Test network");
@@ -66,37 +105,37 @@ export const useWallet = () => {
                     fromBlock: 0,
                     toBlock: 'latest',
                 };
-                    // const logs = await provider.getLogs(filter);
-                    // console.log("Logs -> ", logs);
+                // const logs = await provider.getLogs(filter);
+                // console.log("Logs -> ", logs);
                 let isPatient;
-                try{
+                try {
                     isPatient = await PR_contract.getPatientDetails(_walletAddress);
                     console.log("Is patient -> ", isPatient)
-                    
-                }catch(err){
-                    
+
+                } catch (err) {
+
                     console.log("Patient err -> ", err);
                 }
-                if(isPatient){
+                if (isPatient) {
                     dispatch(setUserType({ userType: 'Patient' }));
                     dispatch(setUserData({ userData: isPatient }));
                     navigate('/patient-table');
                 }
                 let isDoctor;
-                try{
+                try {
                     isDoctor = await DR_contract.getDoctorDetails(_walletAddress);
-                }catch(err){
+                } catch (err) {
                     console.log("ISDOCTOR -> ", isDoctor);
                     console.log("Doctor err -> ", err);
                 }
-                if(isDoctor){
+                if (isDoctor) {
                     dispatch(setUserType({ userType: 'Doctor' }));
                     dispatch(setUserData({ userData: isDoctor }));
                     navigate('/doctor-table');
                 }
-                if(isPatient === undefined && isDoctor === undefined){
+                if (isPatient === undefined && isDoctor === undefined) {
                     navigate('/register');
-                } 
+                }
                 // console.log(await DR_contract.getDoctorDetails(_walletAddress));
                 // console.log("From doctor ", await DR_contract.registerDoctor("Uday1", "Special", "0101", "Male"));
 
@@ -222,5 +261,5 @@ export const useWallet = () => {
         }
     };
 
-    return { handleConnectWallet, getAllContractEvents, getUserTransactions };
+    return { handleConnectWallet, getAllContractEvents, getUserTransactions, fetchLogs };
 };

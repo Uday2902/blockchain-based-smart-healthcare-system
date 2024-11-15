@@ -5,6 +5,7 @@ import SidePanel from "./components/SidePanel";
 import ReactModal from "./components/ReactModal";
 import Registration from "./components/Registration";
 import NotFound from "./components/NotFound";
+import Dashboard from "./components/Dashboard";
 
 const SignIn = lazy(() => import("./components/SignIn"));
 const SignUp = lazy(() => import("./components/DoctorRegistration"));
@@ -39,6 +40,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/modal" element={<ReactModal />} />
+            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
             <Route path="/register" element={<Registration />} />
             <Route path="/*" element={<MainLayout />} />
             <Route path="*" element={<NotFound />} />

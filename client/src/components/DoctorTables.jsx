@@ -19,6 +19,7 @@ const DoctorTables = () => {
   );
   const signer = useSelector((state) => state.user.signer);
   const MRcontract = useSelector((state) => state.user.MRcontract);
+  const PRcontract = useSelector((state) => state.user.PRcontract);
 
   useEffect(() => {
     if (!isMetaMaskConnected || signer === undefined || signer === null) {
@@ -37,7 +38,31 @@ const DoctorTables = () => {
           doctorAddress: `${signer}`,
           fileHashes: doctorReports
         });
-        const files = response.data;
+
+        let files = response.data;
+        console.log(files)
+        try {
+          for(let file of files){
+            console.log(file.patientAddress)
+            let patientDetails = ["Patient", "DOB", "Gender"];
+            file.patientDetails = patientDetails;
+            try {
+              patientDetails = await PRcontract.getPatientDetails(file.patientAddress)
+              file.patientDetails = {
+                name: patientDetails ? patientDetails[0] : "Patient",
+                dateOfBirth: patientDetails ? patientDetails[1] : "dob",
+                gender: patientDetails ? patientDetails[2] : "NA"
+              };  
+            } catch (error) {
+              console.log("Patient info not found");
+            }
+                    
+          console.log("Patient Details -> ", file)
+          }
+          console.log(files)
+        } catch (error) {
+          
+        }
         setDataToShow(files);
       } catch (error) {
         console.error("Error downloading files", error);
@@ -85,17 +110,16 @@ const DoctorTables = () => {
         byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: file.fileType }); // Create a Blob of the file
+      const blob = new Blob([byteArray], { type: file.fileType });
 
       // Create a download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", file.fileName); // Set download file name
+      link.setAttribute("download", file.fileName); 
       document.body.appendChild(link);
       link.click();
 
-      // Cleanup
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -103,18 +127,16 @@ const DoctorTables = () => {
     }
   };
 
-  // Handle file selection
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // Store the selected file in state
+    setFile(e.target.files[0]);
   };
 
   const handleCopyToClipboard = (hash) => {
-    navigator.clipboard.writeText(hash); // Copy the full hash to the clipboard
-    setCopiedHash(hash); // Set the copied hash to trigger the animation
-    setTimeout(() => setCopiedHash(null), 2000); // Reset the copied hash after 2 seconds
+    navigator.clipboard.writeText(hash);
+    setCopiedHash(hash);
+    setTimeout(() => setCopiedHash(null), 2000);
   };
 
-  // Open modal on "Edit" button click and set the selected file for editing
   const handleEditClick = (file) => {
     setSelectedFile(file);
     setShowModal(true);
@@ -126,30 +148,19 @@ const DoctorTables = () => {
         <ReactModal
           show={showModal}
           onClose={() => setShowModal(false)}
-          selectedFile={selectedFile}
         />
       )}
 
       <div className="table-section">
-        <div style={{ textAlign: "right" }}>
-          <input type="file" id="file-upload" onChange={handleFileChange} />
-          <button
-            onClick={handleUploadClick}
-            style={{ marginLeft: "10px" }}
-            disabled={!file}
-          >
-            Upload New Report
-          </button>
-        </div>
+        
         <h2>Reports</h2>
         <table>
           <thead>
             <tr>
               <th>Report</th>
               <th>Hash</th>
-              <th>Last Updated</th>
+              <th>Patient</th>
               <th>Download</th>
-              <th>Manage Permissions</th>
             </tr>
           </thead>
           <tbody>
@@ -177,14 +188,11 @@ const DoctorTables = () => {
                 >
                   {file.fileHash.slice(0, 12)}...{" "}
                 </td>
-                <td>{file.lastUpdated || "N/A"}</td>
+                <td>{file.patientDetails.name || "Patient"}</td>
                 <td>
                   <button onClick={() => handleDownloadClick(file)}>
                     Download
                   </button>
-                </td>
-                <td>
-                  <button onClick={() => handleEditClick(file)}>Edit</button>
                 </td>
               </tr>
             ))}

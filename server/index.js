@@ -6,6 +6,7 @@ import multer from 'multer';
 import path from 'path';
 
 import EventEmitter from "events";
+// import { console } from 'inspector';
 
 const app = express();
 app.use(express.json());
@@ -97,6 +98,40 @@ function checkFileType(file, cb) {
     }
 }
 
+const getPatientDetails = async (fileHash) => {
+    try {
+        let details = {
+            patient: "Patient",
+            fileHash: fileHash
+        };
+
+        // Iterate over each fileHash to get the associated userHash and patient details
+        // for (const fileHash of fileHashes) {
+            // Find the report for the current fileHash
+            const report = await Reports.findOne({
+                'reportsHashes.fileHash': fileHash
+            });
+
+            if (report) {
+                // Find the patient associated with the userHash
+                const patient = await Patient.findOne({ hash: report.userHash });
+
+                if (patient) {
+                    // Push the required structure to the details array
+                    details.patient = patient.hash;
+                    details.fileHash = fileHash
+                    
+                }
+            // }
+        }
+
+        return details;
+    } catch (error) {
+        console.error(error);
+        return { message: 'Error fetching patient details', error };
+    }
+};
+
 
 app.post('/get-files', async (req, res) => {
     try {
@@ -127,33 +162,48 @@ app.post('/get-files', async (req, res) => {
 });
 
 app.post('/get-files-doctor', async (req, res) => {
-    try{
+    try {
         const { doctorAddress, fileHashes } = req.body;
         console.log("fileHashes -> ", fileHashes);
 
         let files = [];
 
         for (let item of fileHashes) {
+            // Get the file metadata from the Reports collection
+            const report = await Reports.findOne({ 'reportsHashes.fileHash': item });
+            if (!report) {
+                console.log(`No report found for fileHash: ${item}`);
+                continue;
+            }
+            
+            const reportHash = report.reportsHashes.find(r => r.fileHash === item);
+            const fileName = reportHash.fileName;
+            const fileType = reportHash.extension;
+
+            // Retrieve file data from IPFS
             const fileData = await getFileDataFromIPFS(item);
             const base64File = fileData.toString('base64');
-            // const extension = item.extension;
+            
+            // Get the patient details
+            const patientDetails = await getPatientDetails(item);
+            console.log("Patient Details -> ", patientDetails);
 
             files.push({
                 data: base64File,
-                fileName: `${item}`,
-                // fileType: `application/${extension}`,
+                fileName: fileName,         // File name retrieved from database
+                // fileType: `application/${fileType}`, // File extension as MIME type
+                patientAddress: patientDetails.patient,
                 fileHash: item
             });
         }
         res.status(200).json(files);
 
-    }catch(err){
+    } catch (err) {
         console.error('Error fetching files:', err);
         res.status(500).send('Error fetching files');
     }
-
-
 });
+
 
 app.post('/upload', upload, async (req, res) => {
     if (!req.file) {
@@ -195,6 +245,11 @@ app.post('/upload', upload, async (req, res) => {
         res.status(500).send(`Error: ${error.message}`);
     }
 });
+
+app.post("/get-patient-list", async (req, res) => {
+    const patientList = await getPatientDetails(req, res);
+    res.status(200).send({patientList});
+})
 
 app.post('/patients', async (req, res) => {
     const { hash } = req.body;
