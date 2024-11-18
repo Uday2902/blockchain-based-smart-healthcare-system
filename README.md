@@ -1,6 +1,6 @@
 # MedLedger - Blockchain-Based Smart Healthcare System
 
-![MedLedger](https://github.com/user-attachments/assets/d9b55373-997f-4036-8a71-4b6249d6ed20)
+<img src="https://github.com/user-attachments/assets/d9b55373-997f-4036-8a71-4b6249d6ed20" alt="Watch the Demo" height="600" width="600">
 
 ## Overview
 
@@ -44,6 +44,8 @@ The **MedLedger** leverages blockchain technology to create a secure, decentrali
 
 ## Demo
 
-[![Watch the Demo](https://github.com/user-attachments/assets/d9b55373-997f-4036-8a71-4b6249d6ed20)](https://drive.google.com/file/d/11raoOtJtqjciR_cXTAlKVd6V8LCeYPeZ/view?usp=drive_link)
+<a href="https://drive.google.com/file/d/11raoOtJtqjciR_cXTAlKVd6V8LCeYPeZ/view?usp=drive_link" target="_blank">
+    <img src="https://github.com/user-attachments/assets/d9b55373-997f-4036-8a71-4b6249d6ed20" alt="Watch the Demo" height="200" width="200">
+</a>
 
 ---
