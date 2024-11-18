@@ -22,7 +22,7 @@ The **MedLedger** leverages blockchain technology to create a secure, decentrali
 
 - **Blockchain**: Decentralized and secure data management.
 - **Solidity**: Smart contracts for record immutability.
-- **Web3.js**: Interaction with blockchain.
+- **Ethers.js**: Interaction with blockchain.
 - **Frontend**: Built with HTML, CSS, and JavaScript.
 
 ---
