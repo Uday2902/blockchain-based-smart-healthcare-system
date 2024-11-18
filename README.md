@@ -44,6 +44,6 @@ The **MedLedger** leverages blockchain technology to create a secure, decentrali
 
 ## Demo
 
-![Watch the Demo](https://drive.google.com/file/d/11raoOtJtqjciR_cXTAlKVd6V8LCeYPeZ/view?usp=drive_link)
+![Watch the Demo](https://drive.google.com/file/d/11raoOtJtqjciR_cXTAlKVd6V8LCeYPeZ/view)
 
 ---
